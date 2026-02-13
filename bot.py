@@ -1,6 +1,5 @@
 import os
 import time
-import math
 import requests
 from dotenv import load_dotenv
 from datetime import datetime, time as dtime
@@ -99,12 +98,9 @@ def main():
                 continue
 
             if abs(diff) >= THRESHOLD_USD:
-                steps = math.floor(abs(diff) / THRESHOLD_USD)
-
                 send_telegram(f"{SYMBOL.lower()} at ${price:.2f} is crazy")
-
-                # posun o celé “schody”
-                last_alert_price = last_alert_price + (THRESHOLD_USD * steps * (1 if diff > 0 else -1))
+                # Keep the reference exactly at the last alerted price.
+                last_alert_price = price
                 last_alert_ts = now
 
         except Exception as e:
@@ -115,4 +111,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
